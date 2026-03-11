@@ -14,8 +14,24 @@ display:flex;
 justify-content:center;
 align-items:center;
 font-family:Arial, sans-serif;
-background:radial-gradient(circle,#bfe0ff,#6bb6ff,#2f80ff);
 overflow:hidden;
+
+background:linear-gradient(135deg,
+#ffb6c1,
+#ffd580,
+#ffffa8,
+#c8ffb0,
+#b8e1ff,
+#d6c6ff);
+
+background-size:400% 400%;
+animation:rainbow 12s ease infinite;
+}
+
+@keyframes rainbow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
 #card{
@@ -41,13 +57,13 @@ text-align:center;
 z-index:1;
 }
 
-#baby{
-font-size:55px;
+#lion{
+font-size:60px;
 animation:bounce 2s infinite;
 }
 
 #title{
-font-size:28px;
+font-size:26px;
 font-weight:bold;
 color:#1e6ee6;
 }
@@ -81,7 +97,7 @@ transform:translateY(120vh) rotate(720deg);
 
 @keyframes bounce{
 0%,100%{transform:translateY(0)}
-50%{transform:translateY(-8px)}
+50%{transform:translateY(-10px)}
 }
 
 </style>
@@ -92,17 +108,17 @@ transform:translateY(120vh) rotate(720deg);
 <div id="card">
 
 <div id="message">
-<div id="baby">👶</div>
-<div id="title">È UN MASCHIETTO! 💙</div>
-<div id="subtitle">Christophe e Irene aspettano un bambino!</div>
+<div id="lion">🦁</div>
+<div id="title">È UN MASCHIETTO!</div>
+<div id="subtitle">Christophe e Irene aspettano un maschietto!</div>
 </div>
 
 <canvas id="scratch"></canvas>
 
 </div>
 
-<audio id="sound">
-<source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_115b9b4c70.mp3?filename=small-crowd-cheer-6713.mp3">
+<audio id="sound" preload="auto">
+<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -155,20 +171,34 @@ if(pixels[i]==0) transparent++
 if(transparent/pixels.length>0.12){
 revealed=true
 launchConfetti()
-document.getElementById("sound").play()
+playSound()
 }
+}
+
+function playSound(){
+const sound=document.getElementById("sound")
+sound.currentTime=0
+sound.play().catch(()=>{})
 }
 
 function launchConfetti(){
 
-for(let i=0;i<150;i++){
+for(let i=0;i<180;i++){
 
 const c=document.createElement("div")
 c.className="confetti"
 
 c.style.left=Math.random()*100+"vw"
 
-const colors=["#3aa0ff","#5bc0ff","#1e6ee6","#9ad9ff","#ffffff"]
+const colors=[
+"#ff6b6b",
+"#ffd93d",
+"#6bff95",
+"#6bcfff",
+"#c77dff",
+"#ffffff"
+]
+
 c.style.background=colors[Math.floor(Math.random()*colors.length)]
 
 const size=6+Math.random()*10
