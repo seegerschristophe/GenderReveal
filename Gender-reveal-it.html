@@ -38,7 +38,7 @@ animation:rainbow 12s ease infinite;
 position:relative;
 width:90vw;
 max-width:380px;
-height:220px;
+height:260px;
 border-radius:20px;
 overflow:hidden;
 background:white;
@@ -55,11 +55,12 @@ justify-content:center;
 align-items:center;
 text-align:center;
 z-index:1;
+padding:10px;
 }
 
-#lion{
-font-size:60px;
-animation:bounce 2s infinite;
+#lionGif{
+width:120px;
+margin-bottom:10px;
 }
 
 #title{
@@ -95,11 +96,6 @@ transform:translateY(120vh) rotate(720deg);
 }
 }
 
-@keyframes bounce{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
-}
-
 </style>
 </head>
 
@@ -108,9 +104,16 @@ transform:translateY(120vh) rotate(720deg);
 <div id="card">
 
 <div id="message">
-<div id="lion">🦁</div>
+
+<img id="lionGif"
+src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyb2hsOTZhdXM4Nm84cWtpcjNrZDV4bWRuY2hib3R5djAzOGM1bWNiNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/T7kKcENcq6TNm/giphy.gif">
+
 <div id="title">È UN MASCHIETTO!</div>
-<div id="subtitle">Christophe e Irene aspettano un maschietto!</div>
+
+<div id="subtitle">
+Christophe e Irene aspettano un maschietto!
+</div>
+
 </div>
 
 <canvas id="scratch"></canvas>
@@ -184,7 +187,7 @@ sound.play().catch(()=>{})
 
 function launchConfetti(){
 
-for(let i=0;i<180;i++){
+for(let i=0;i<200;i++){
 
 const c=document.createElement("div")
 c.className="confetti"
