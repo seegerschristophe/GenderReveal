@@ -118,7 +118,7 @@ transform:translateY(120vh) rotate(720deg);
 </div>
 
 <audio id="sound" preload="auto">
-<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3" type="audio/mpeg">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8c8a73467.mp3?filename=african-choir-celebration-7037.mp3" type="audio/mpeg">
 </audio>
 
 <script>
@@ -177,6 +177,7 @@ playSound()
 
 function playSound(){
 const sound=document.getElementById("sound")
+sound.volume=0.8
 sound.currentTime=0
 sound.play().catch(()=>{})
 }
