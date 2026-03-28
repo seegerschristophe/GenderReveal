@@ -1,11 +1,12 @@
 <!DOCTYPE html>
-<html lang="it">
+<html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gratta per scoprire</title>
+<title>Gratte pour découvrir</title>
 
 <style>
+
 body{
 margin:0;
 height:100vh;
@@ -37,7 +38,7 @@ animation:rainbow 12s ease infinite;
 position:relative;
 width:90vw;
 max-width:380px;
-height:220px;
+height:260px;
 border-radius:20px;
 overflow:hidden;
 background:white;
@@ -54,11 +55,12 @@ justify-content:center;
 align-items:center;
 text-align:center;
 z-index:1;
+padding:10px;
 }
 
-#lion{
-font-size:60px;
-animation:bounce 2s infinite;
+#lionGif{
+width:120px;
+margin-bottom:10px;
 }
 
 #title{
@@ -94,12 +96,7 @@ transform:translateY(120vh) rotate(720deg);
 }
 }
 
-@keyframes bounce{
-0%,100%{transform:translateY(0)}
-50%{transform:translateY(-10px)}
-}
-
-/* GIF OVERLAY */
+/* 🔥 FULLSCREEN GIF OVERLAY */
 #gifOverlay{
 position:fixed;
 top:0;
@@ -121,29 +118,42 @@ width:100%;
 height:100%;
 object-fit:contain;
 }
+
 </style>
 </head>
 
 <body>
 
 <div id="card">
+
 <div id="message">
-<div id="lion">🦁</div>
-<div id="title">È UN MASCHIETTO!</div>
-<div id="subtitle">Christophe e Irene aspettano un maschietto!</div>
-</div>
-<canvas id="scratch"></canvas>
+
+<img id="lionGif"
+src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyb2hsOTZhdXM4Nm84cWtpcjNrZDV4bWRuY2hib3R5djAzOGM1bWNiNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/T7kKcENcq6TNm/giphy.gif">
+
+<div id="title">C’EST UN CHIEN DE TALUS !</div>
+
+<div id="subtitle">
+Christophe et Irene attendent un petit chien de talus pour fin Juillet !
 </div>
 
+</div>
+
+<canvas id="scratch"></canvas>
+
+</div>
+
+<!-- 🔥 FULLSCREEN GIF -->
 <div id="gifOverlay">
 <img src="https://media.tenor.com/fhMe5arso00AAAAi/cock-bot-discord.gif">
 </div>
 
 <audio id="sound" preload="auto">
-<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3" type="audio/mpeg">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8c8a73467.mp3?filename=african-choir-celebration-7037.mp3" type="audio/mpeg">
 </audio>
 
 <script>
+
 const canvas=document.getElementById("scratch")
 const ctx=canvas.getContext("2d")
 const rect=document.getElementById("card").getBoundingClientRect()
@@ -157,12 +167,13 @@ ctx.fillRect(0,0,canvas.width,canvas.height)
 ctx.fillStyle="white"
 ctx.font="22px Arial"
 ctx.textAlign="center"
-ctx.fillText("Gratta qui!",canvas.width/2,canvas.height/2)
+ctx.fillText("Gratte ici!",canvas.width/2,canvas.height/2)
 
 let drawing=false
 let revealed=false
 
 function scratch(e){
+
 if(!drawing) return
 
 const r=canvas.getBoundingClientRect()
@@ -178,6 +189,7 @@ checkReveal()
 }
 
 function checkReveal(){
+
 if(revealed) return
 
 const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data
@@ -196,34 +208,47 @@ playSound()
 
 function playSound(){
 const sound=document.getElementById("sound")
+sound.volume=0.8
 sound.currentTime=0
 sound.play().catch(()=>{})
 }
 
 function launchConfetti(){
-for(let i=0;i<180;i++){
+
+for(let i=0;i<200;i++){
+
 const c=document.createElement("div")
 c.className="confetti"
 
 c.style.left=Math.random()*100+"vw"
 
-const colors=["#ff6b6b","#ffd93d","#6bff95","#6bcfff","#c77dff","#ffffff"]
+const colors=[
+"#ff6b6b",
+"#ffd93d",
+"#6bff95",
+"#6bcfff",
+"#c77dff",
+"#ffffff"
+]
+
 c.style.background=colors[Math.floor(Math.random()*colors.length)]
 
 const size=6+Math.random()*10
 c.style.width=size+"px"
 c.style.height=size+"px"
+
 c.style.animationDuration=(2+Math.random()*3)+"s"
 
 document.body.appendChild(c)
 }
 
-/* SHOW GIF AFTER CONFETTI */
+/* 🎉 SHOW GIF AFTER CONFETTI */
 setTimeout(()=>{
 const overlay=document.getElementById("gifOverlay")
 overlay.style.opacity="1"
 overlay.style.pointerEvents="auto"
 },2000)
+
 }
 
 canvas.addEventListener("mousedown",()=>drawing=true)
@@ -233,6 +258,7 @@ canvas.addEventListener("mousemove",scratch)
 canvas.addEventListener("touchstart",()=>drawing=true)
 canvas.addEventListener("touchend",()=>drawing=false)
 canvas.addEventListener("touchmove",scratch)
+
 </script>
 
 </body>
