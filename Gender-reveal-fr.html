@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gratte pour découvrir</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial, sans-serif;
+overflow:hidden;
+
+background:linear-gradient(135deg,
+#ffb6c1,
+#ffd580,
+#ffffa8,
+#c8ffb0,
+#b8e1ff,
+#d6c6ff);
+
+background-size:400% 400%;
+animation:rainbow 12s ease infinite;
+}
+
+@keyframes rainbow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+#card{
+position:relative;
+width:90vw;
+max-width:380px;
+height:220px;
+border-radius:20px;
+overflow:hidden;
+background:white;
+box-shadow:0 20px 50px rgba(0,0,0,0.3);
+}
+
+#message{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+z-index:1;
+}
+
+#lion{
+font-size:60px;
+animation:bounce 2s infinite;
+}
+
+#title{
+font-size:26px;
+font-weight:bold;
+color:#1e6ee6;
+}
+
+#subtitle{
+margin-top:8px;
+font-size:16px;
+color:#444;
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+z-index:2;
+}
+
+.confetti{
+position:fixed;
+width:10px;
+height:10px;
+top:-10px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(120vh) rotate(720deg);
+}
+}
+
+@keyframes bounce{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+}
+</style>
+</head>
+
+<body>
+
+<div id="card">
+
+<div id="message">
+<div id="lion">🦁</div>
+<div id="title">C’EST UN GARÇON !</div>
+<div id="subtitle">Christophe et Irene attendent un petit garçon pour fin Juillet !</div>
+</div>
+
+<canvas id="scratch"></canvas>
+
+</div>
+
+<audio id="sound" preload="auto">
+<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ONLY text modified
+const canvas=document.getElementById("scratch")
+const ctx=canvas.getContext("2d")
+const rect=document.getElementById("card").getBoundingClientRect()
+
+canvas.width=rect.width
+canvas.height=rect.height
+
+ctx.fillStyle="#c0c6cf"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="white"
+ctx.font="22px Arial"
+ctx.textAlign="center"
+ctx.fillText("Gratte ici !",canvas.width/2,canvas.height/2)
+
+// rest unchanged...

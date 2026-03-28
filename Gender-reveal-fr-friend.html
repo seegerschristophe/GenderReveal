@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gratta per scoprire</title>
+
+<style>
+body{
+margin:0;
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+font-family:Arial, sans-serif;
+overflow:hidden;
+
+background:linear-gradient(135deg,
+#ffb6c1,
+#ffd580,
+#ffffa8,
+#c8ffb0,
+#b8e1ff,
+#d6c6ff);
+
+background-size:400% 400%;
+animation:rainbow 12s ease infinite;
+}
+
+@keyframes rainbow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
+}
+
+#card{
+position:relative;
+width:90vw;
+max-width:380px;
+height:220px;
+border-radius:20px;
+overflow:hidden;
+background:white;
+box-shadow:0 20px 50px rgba(0,0,0,0.3);
+}
+
+#message{
+position:absolute;
+width:100%;
+height:100%;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+z-index:1;
+}
+
+#lion{
+font-size:60px;
+animation:bounce 2s infinite;
+}
+
+#title{
+font-size:26px;
+font-weight:bold;
+color:#1e6ee6;
+}
+
+#subtitle{
+margin-top:8px;
+font-size:16px;
+color:#444;
+}
+
+canvas{
+position:absolute;
+top:0;
+left:0;
+z-index:2;
+}
+
+.confetti{
+position:fixed;
+width:10px;
+height:10px;
+top:-10px;
+animation:fall linear forwards;
+}
+
+@keyframes fall{
+to{
+transform:translateY(120vh) rotate(720deg);
+}
+}
+
+@keyframes bounce{
+0%,100%{transform:translateY(0)}
+50%{transform:translateY(-10px)}
+}
+
+/* GIF OVERLAY */
+#gifOverlay{
+position:fixed;
+top:0;
+left:0;
+width:100vw;
+height:100vh;
+background:black;
+display:flex;
+justify-content:center;
+align-items:center;
+z-index:999;
+opacity:0;
+pointer-events:none;
+transition:opacity 0.8s ease;
+}
+
+#gifOverlay img{
+width:100%;
+height:100%;
+object-fit:contain;
+}
+</style>
+</head>
+
+<body>
+
+<div id="card">
+<div id="message">
+<div id="lion">🦁</div>
+<div id="title">È UN MASCHIETTO!</div>
+<div id="subtitle">Christophe e Irene aspettano un maschietto!</div>
+</div>
+<canvas id="scratch"></canvas>
+</div>
+
+<div id="gifOverlay">
+<img src="https://media.tenor.com/fhMe5arso00AAAAi/cock-bot-discord.gif">
+</div>
+
+<audio id="sound" preload="auto">
+<source src="https://assets.mixkit.co/active_storage/sfx/212/212-preview.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+const canvas=document.getElementById("scratch")
+const ctx=canvas.getContext("2d")
+const rect=document.getElementById("card").getBoundingClientRect()
+
+canvas.width=rect.width
+canvas.height=rect.height
+
+ctx.fillStyle="#c0c6cf"
+ctx.fillRect(0,0,canvas.width,canvas.height)
+
+ctx.fillStyle="white"
+ctx.font="22px Arial"
+ctx.textAlign="center"
+ctx.fillText("Gratta qui!",canvas.width/2,canvas.height/2)
+
+let drawing=false
+let revealed=false
+
+function scratch(e){
+if(!drawing) return
+
+const r=canvas.getBoundingClientRect()
+const x=(e.touches?e.touches[0].clientX:e.clientX)-r.left
+const y=(e.touches?e.touches[0].clientY:e.clientY)-r.top
+
+ctx.globalCompositeOperation="destination-out"
+ctx.beginPath()
+ctx.arc(x,y,20,0,Math.PI*2)
+ctx.fill()
+
+checkReveal()
+}
+
+function checkReveal(){
+if(revealed) return
+
+const pixels=ctx.getImageData(0,0,canvas.width,canvas.height).data
+let transparent=0
+
+for(let i=3;i<pixels.length;i+=4){
+if(pixels[i]==0) transparent++
+}
+
+if(transparent/pixels.length>0.12){
+revealed=true
+launchConfetti()
+playSound()
+}
+}
+
+function playSound(){
+const sound=document.getElementById("sound")
+sound.currentTime=0
+sound.play().catch(()=>{})
+}
+
+function launchConfetti(){
+for(let i=0;i<180;i++){
+const c=document.createElement("div")
+c.className="confetti"
+
+c.style.left=Math.random()*100+"vw"
+
+const colors=["#ff6b6b","#ffd93d","#6bff95","#6bcfff","#c77dff","#ffffff"]
+c.style.background=colors[Math.floor(Math.random()*colors.length)]
+
+const size=6+Math.random()*10
+c.style.width=size+"px"
+c.style.height=size+"px"
+c.style.animationDuration=(2+Math.random()*3)+"s"
+
+document.body.appendChild(c)
+}
+
+/* SHOW GIF AFTER CONFETTI */
+setTimeout(()=>{
+const overlay=document.getElementById("gifOverlay")
+overlay.style.opacity="1"
+overlay.style.pointerEvents="auto"
+},2000)
+}
+
+canvas.addEventListener("mousedown",()=>drawing=true)
+canvas.addEventListener("mouseup",()=>drawing=false)
+canvas.addEventListener("mousemove",scratch)
+
+canvas.addEventListener("touchstart",()=>drawing=true)
+canvas.addEventListener("touchend",()=>drawing=false)
+canvas.addEventListener("touchmove",scratch)
+</script>
+
+</body>
+</html>
