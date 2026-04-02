@@ -1,28 +1,48 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>Scratch to reveal</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scratch to Reveal</title>
 
 <style>
+
 body{
-font-family:sans-serif;
-background:#eef6ff;
+margin:0;
+height:100vh;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
-margin:0;
+font-family:Arial, sans-serif;
+overflow:hidden;
+
+background:linear-gradient(135deg,
+#ffb6c1,
+#ffd580,
+#ffffa8,
+#c8ffb0,
+#b8e1ff,
+#d6c6ff);
+
+background-size:400% 400%;
+animation:rainbow 12s ease infinite;
+}
+
+@keyframes rainbow{
+0%{background-position:0% 50%}
+50%{background-position:100% 50%}
+100%{background-position:0% 50%}
 }
 
 #card{
 position:relative;
-width:340px;
-height:220px;
-border-radius:16px;
+width:90vw;
+max-width:380px;
+height:260px;
+border-radius:20px;
 overflow:hidden;
-box-shadow:0 15px 40px rgba(0,0,0,0.2);
 background:white;
+box-shadow:0 20px 50px rgba(0,0,0,0.3);
 }
 
 #message{
@@ -34,37 +54,48 @@ flex-direction:column;
 justify-content:center;
 align-items:center;
 text-align:center;
+z-index:1;
+padding:10px;
+}
+
+#lionGif{
+width:120px;
+margin-bottom:10px;
+}
+
+#title{
 font-size:26px;
 font-weight:bold;
 color:#1e6ee6;
 }
 
-#sub{
+#subtitle{
+margin-top:8px;
 font-size:16px;
-margin-top:10px;
-color:#333;
+color:#444;
 }
 
 canvas{
 position:absolute;
 top:0;
 left:0;
+z-index:2;
 }
 
 .confetti{
 position:fixed;
-width:8px;
-height:8px;
-background:#3aa0ff;
+width:10px;
+height:10px;
 top:-10px;
-animation:fall 3s linear infinite;
+animation:fall linear forwards;
 }
 
 @keyframes fall{
 to{
-transform:translateY(110vh) rotate(360deg);
+transform:translateY(120vh) rotate(720deg);
 }
 }
+
 </style>
 </head>
 
@@ -73,13 +104,26 @@ transform:translateY(110vh) rotate(360deg);
 <div id="card">
 
 <div id="message">
-👶 It's a BOY! 💙
-<div id="sub">Christophe & Irene are having a baby boy!</div>
+
+<img id="lionGif"
+src="https://media2.giphy.com/media/v1.Y2lkPTZjMDliOTUyb2hsOTZhdXM4Nm84cWtpcjNrZDV4bWRuY2hib3R5djAzOGM1bWNiNCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/T7kKcENcq6TNm/giphy.gif">
+
+<div id="title">IT'S A BOY!</div>
+
+<div id="subtitle">
+Christophe and Irene are expecting </br>
+  a little boy for end of July!
+</div>
+
 </div>
 
 <canvas id="scratch"></canvas>
 
 </div>
+
+<audio id="sound" preload="auto">
+<source src="https://cdn.pixabay.com/download/audio/2022/03/24/audio_c8c8a73467.mp3?filename=african-choir-celebration-7037.mp3" type="audio/mpeg">
+</audio>
 
 <script>
 
@@ -90,11 +134,11 @@ const rect=document.getElementById("card").getBoundingClientRect()
 canvas.width=rect.width
 canvas.height=rect.height
 
-ctx.fillStyle="#bfc6d1"
+ctx.fillStyle="#c0c6cf"
 ctx.fillRect(0,0,canvas.width,canvas.height)
 
 ctx.fillStyle="white"
-ctx.font="20px sans-serif"
+ctx.font="22px Arial"
 ctx.textAlign="center"
 ctx.fillText("Scratch here!",canvas.width/2,canvas.height/2)
 
@@ -111,7 +155,7 @@ const y=(e.touches?e.touches[0].clientY:e.clientY)-r.top
 
 ctx.globalCompositeOperation="destination-out"
 ctx.beginPath()
-ctx.arc(x,y,18,0,Math.PI*2)
+ctx.arc(x,y,20,0,Math.PI*2)
 ctx.fill()
 
 checkReveal()
@@ -128,20 +172,46 @@ for(let i=3;i<pixels.length;i+=4){
 if(pixels[i]==0) transparent++
 }
 
-if(transparent/pixels.length>0.15){
+if(transparent/pixels.length>0.12){
 revealed=true
 launchConfetti()
+playSound()
 }
+}
+
+function playSound(){
+const sound=document.getElementById("sound")
+sound.volume=0.8
+sound.currentTime=0
+sound.play().catch(()=>{})
 }
 
 function launchConfetti(){
 
-for(let i=0;i<80;i++){
+for(let i=0;i<200;i++){
+
 const c=document.createElement("div")
 c.className="confetti"
+
 c.style.left=Math.random()*100+"vw"
-c.style.background=["#3aa0ff","#5bc0ff","#1e6ee6","#8fd3ff"][Math.floor(Math.random()*4)]
+
+const colors=[
+"#ff6b6b",
+"#ffd93d",
+"#6bff95",
+"#6bcfff",
+"#c77dff",
+"#ffffff"
+]
+
+c.style.background=colors[Math.floor(Math.random()*colors.length)]
+
+const size=6+Math.random()*10
+c.style.width=size+"px"
+c.style.height=size+"px"
+
 c.style.animationDuration=(2+Math.random()*3)+"s"
+
 document.body.appendChild(c)
 }
 }
